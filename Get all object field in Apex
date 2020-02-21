@@ -1,0 +1,14 @@
+
+// Get a map of all fields available to you on the object table/object
+// keyed by the API name of each field
+Map<String,Schema.SObjectField> myObjectFields = processinstancenode.SObjectType.getDescribe().fields.getMap();
+
+// Get a Set of the field names
+Set<String> myObjectFieldAPINames = myObjectFields.keyset();
+
+// Print out the names to the debug log
+String allFields = 'ALL ACCESSIBLE FIELDS on processinstancenode Object:\n\n';
+for (String s : myObjectFieldAPINames) {
+allFields += s + '\n';
+}
+System.debug(allFields);
