@@ -1,0 +1,31 @@
+String APP_NAMESPACE_PREFIX = 'qe';
+
+List<User> licensedUsers = [SELECT Name FROM User WHERE Id in (SELECT UserId FROM UserPackageLicense WHERE (PackageLicense.NamespacePrefix = :APP_NAMESPACE_PREFIX))];
+
+String formUsersList = 'User Id, User Name, Profile Name, Role Name, IsActive, Package Name\n';
+
+for(User userObj : [SELECT Name, Profile.name, Userrole.name, IsACtive FROM User WHERE Id in (
+SELECT UserId 
+FROM UserPackageLicense 
+WHERE (PackageLicense.NamespacePrefix = :APP_NAMESPACE_PREFIX))])
+{
+formUsersList += userObj.Id +','+userObj.Name+','+userObj.Profile.name+','+userObj.Userrole.name+','+userObj.IsActive+','+APP_NAMESPACE_PREFIX+'\n';
+}
+
+formUsersList = formUsersList.removeEnd('\n');
+List<Messaging.Emailfileattachment> attachmentList = new List<Messaging.Emailfileattachment>();
+
+Messaging.EmailFileAttachment csvAttc = new Messaging.EmailFileAttachment();
+blob csvBlob = Blob.valueOf(formUsersList);
+string csvname= 'UserList.csv';
+csvAttc.setFileName(csvname);
+csvAttc.setBody(csvBlob);
+attachmentList.add(csvAttc);
+List<String> sendToEmailAddrList = new List<String>();
+sendToEmailAddrList.add('priyatharsini.sivanathan@nttdata.com');
+Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+mail.setToAddresses(sendToEmailAddrList);
+mail.setSubject('Users List');        
+mail.setHtmlBody('Test');
+mail.setFileAttachments(attachmentList);
+Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
