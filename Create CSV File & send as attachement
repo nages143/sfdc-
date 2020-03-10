@@ -1,6 +1,5 @@
 String APP_NAMESPACE_PREFIX = 'qe';
 
-List<User> licensedUsers = [SELECT Name FROM User WHERE Id in (SELECT UserId FROM UserPackageLicense WHERE (PackageLicense.NamespacePrefix = :APP_NAMESPACE_PREFIX))];
 
 String formUsersList = 'User Id, User Name, Profile Name, Role Name, IsActive, Package Name\n';
 
