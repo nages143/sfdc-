@@ -1,0 +1,4 @@
+1) Show Tasks related to Colsed opportunities:
+
+select id, status, subject,ActivityDate from task where (status = 'Open' or status = 'In progress' ) and WhatId In (Select Id from opportunity where (StageName = 'Order Won' or  StageName= 'Order Lost')  ) and ActivityDate < 2020-01-01
+
